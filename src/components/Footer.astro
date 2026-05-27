@@ -1,0 +1,123 @@
+---
+import contentData from '../data/content.json'
+
+const { social, email } = contentData
+---
+
+<footer id="footer" class="section-dark">
+  <div class="footer-inner">
+    <span class="footer-copy">JOSHUA LUGO © 2026</span>
+
+    <div class="footer-social">
+      {
+        social.instagram && (
+          <a
+            href={`https://instagram.com/${social.instagram}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            Instagram
+          </a>
+        )
+      }
+      {
+        social.vimeo && (
+          <a
+            href={`https://vimeo.com/${social.vimeo}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Vimeo"
+          >
+            Vimeo
+          </a>
+        )
+      }
+      {
+        social.linkedin && (
+          <a
+            href={`https://linkedin.com/in/${social.linkedin}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            LinkedIn
+          </a>
+        )
+      }
+    </div>
+
+    <div class="footer-right">
+      <a href="/cv/JoshuaLugo_CV.pdf" download class="footer-link">↓ CV</a>
+      <a href={`mailto:${email}`} class="footer-link">{email}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  #footer {
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--color-text-dark-muted);
+  }
+
+  .footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .footer-copy,
+  .footer-social,
+  .footer-right {
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-dark-muted);
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .footer-social a,
+  .footer-right a {
+    color: var(--color-text-dark-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-social a:hover,
+  .footer-right a:hover {
+    color: var(--color-text-dark);
+  }
+
+  .footer-right {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .footer-link {
+    color: var(--color-text-dark-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  @media (max-width: 768px) {
+    .footer-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    #footer {
+      padding: 2rem 1rem;
+    }
+  }
+</style>

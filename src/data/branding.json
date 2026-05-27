@@ -1,0 +1,26 @@
+[
+  {
+    "id": "branding-01",
+    "title": "NOMBRE DE MARCA",
+    "year": 2025,
+    "description": "Identidad visual para...",
+    "thumbnail": "branding-01.jpg",
+    "video": "branding-01.mp4"
+  },
+  {
+    "id": "branding-02",
+    "title": "NOMBRE DE MARCA",
+    "year": 2024,
+    "description": "Identidad visual para...",
+    "thumbnail": "branding-02.jpg",
+    "video": "branding-02.mp4"
+  },
+  {
+    "id": "branding-03",
+    "title": "NOMBRE DE MARCA",
+    "year": 2024,
+    "description": "Identidad visual para...",
+    "thumbnail": "branding-03.jpg",
+    "video": "branding-03.mp4"
+  }
+]

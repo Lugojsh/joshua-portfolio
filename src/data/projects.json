@@ -1,0 +1,29 @@
+[
+  {
+    "id": "proyecto-01",
+    "title": "NOMBRE DEL PROYECTO",
+    "category": "Fotografía",
+    "year": 2025,
+    "client": "Cliente",
+    "thumbnail": "proyecto-01.jpg",
+    "description": "Descripción breve del proyecto."
+  },
+  {
+    "id": "proyecto-02",
+    "title": "NOMBRE DEL PROYECTO",
+    "category": "Motion",
+    "year": 2024,
+    "client": "Cliente",
+    "thumbnail": "proyecto-02.jpg",
+    "description": "Descripción breve del proyecto."
+  },
+  {
+    "id": "proyecto-03",
+    "title": "NOMBRE DEL PROYECTO",
+    "category": "Branding",
+    "year": 2024,
+    "client": "Cliente",
+    "thumbnail": "proyecto-03.jpg",
+    "description": "Descripción breve del proyecto."
+  }
+]

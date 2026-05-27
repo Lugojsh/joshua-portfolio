@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  --font-family-display: 'Space Grotesk', sans-serif;
+  --font-family-body: 'Inter', sans-serif;
+}
+
+:root {
+  --color-bg:               #EDEDEA;
+  --color-text:             #111111;
+  --color-text-muted:       #888888;
+  --color-border:           #D4D4D0;
+  --color-bg-dark:          #0D0D0D;
+  --color-text-dark:        #EDEDEA;
+  --color-text-dark-muted:  #555555;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --text-hero:    clamp(5rem, 12vw, 14rem);
+  --text-section: clamp(3rem, 7vw, 8rem);
+  --text-project: clamp(1.8rem, 3.5vw, 4rem);
+  --text-body:    1rem;
+  --text-meta:    0.75rem;
+
+  --weight-black:  900;
+  --weight-bold:   700;
+  --weight-regular:400;
+  --weight-light:  300;
+
+  --tracking-wide:  0.15em;
+  --tracking-tight: -0.02em;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+/* Custom cursor — hide native cursor */
+html {
+  cursor: none;
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--color-text);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: background 0.3s, opacity 0.2s;
+  will-change: transform;
+}
+
+body.is-dark-section .cursor-dot {
+  background: var(--color-text-dark);
+}
+
+/* Grain overlay */
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Section transitions */
+.section-dark {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-dark);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-muted);
+}

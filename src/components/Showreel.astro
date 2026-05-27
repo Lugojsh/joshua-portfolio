@@ -1,0 +1,136 @@
+---
+import contentData from '../data/content.json'
+
+const { showreel } = contentData
+const hasVimeo = showreel.vimeoId && showreel.vimeoId.length > 0
+---
+
+<section id="showreel" class="section-dark">
+  <div class="showreel-inner">
+    <span class="showreel-label">SHOWREEL</span>
+
+    <div class="showreel-video-wrap">
+      {
+        hasVimeo ? (
+          <iframe
+            class="showreel-iframe"
+            src={`https://player.vimeo.com/video/${showreel.vimeoId}?badge=0&autopause=0&player_id=0&app_id=58479`}
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+            title="Showreel"
+          />
+        ) : (
+          <div class="showreel-placeholder">
+            <p>Agrega el ID de tu video en <code>src/data/content.json → showreel.vimeoId</code></p>
+          </div>
+        )
+      }
+
+      {
+        hasVimeo && (
+          <button class="showreel-play" id="showreel-play" aria-label="Reproducir showreel">
+            <span>▶</span>
+          </button>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  #showreel {
+    padding: 8rem 2rem;
+  }
+
+  .showreel-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .showreel-label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-dark-muted);
+    margin-bottom: 2rem;
+  }
+
+  .showreel-video-wrap {
+    position: relative;
+    aspect-ratio: 16/9;
+    width: 100%;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .showreel-iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .showreel-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    color: var(--color-text-dark-muted);
+    letter-spacing: var(--tracking-wide);
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .showreel-placeholder code {
+    font-size: 0.8em;
+    opacity: 0.7;
+  }
+
+  .showreel-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--color-text-dark);
+    font-size: 4rem;
+    transition: opacity 0.2s;
+  }
+
+  .showreel-play.hidden {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    #showreel {
+      padding: 4rem 1rem;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+  gsap.registerPlugin(ScrollTrigger)
+
+  gsap.from('.showreel-video-wrap', {
+    scrollTrigger: { trigger: '#showreel', start: 'top 75%' },
+    opacity: 0,
+    y: 40,
+    duration: 0.9,
+    ease: 'power2.out',
+  })
+
+  const playBtn = document.getElementById('showreel-play')
+  if (playBtn) {
+    playBtn.addEventListener('click', () => {
+      playBtn.classList.add('hidden')
+    })
+  }
+</script>

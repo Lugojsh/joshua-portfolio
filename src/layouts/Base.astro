@@ -1,0 +1,98 @@
+---
+import '../styles/global.css'
+
+interface Props {
+  title?: string
+  description?: string
+}
+
+const {
+  title = 'Joshua Lugo — Diseñador Digital, Fotógrafo & Cineasta',
+  description = 'Portfolio de Joshua Lugo Gutiérrez. Diseño digital, fotografía, video, branding y motion graphics desde León, México.',
+} = Astro.props
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="author" content="Joshua Lugo Gutiérrez" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+
+    <title>{title}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&family=Inter:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <!-- Custom cursor -->
+    <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+
+    <slot />
+
+    <!-- Cursor tracking -->
+    <script>
+      const dot = document.getElementById('cursor-dot')
+      if (dot) {
+        document.addEventListener('mousemove', (e) => {
+          dot.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`
+        })
+        document.addEventListener('mouseleave', () => {
+          dot.style.opacity = '0'
+        })
+        document.addEventListener('mouseenter', () => {
+          dot.style.opacity = '1'
+        })
+      }
+    </script>
+
+    <!-- Lenis + GSAP global init -->
+    <script>
+      import Lenis from 'lenis'
+      import gsap from 'gsap'
+      import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+      gsap.registerPlugin(ScrollTrigger)
+
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      })
+
+      lenis.on('scroll', () => ScrollTrigger.update())
+
+      gsap.ticker.add((time: number) => {
+        lenis.raf(time * 1000)
+      })
+
+      gsap.ticker.lagSmoothing(0)
+
+      // Dark section detection for cursor color
+      const darkSections = document.querySelectorAll('.section-dark')
+      const body = document.body
+
+      lenis.on('scroll', () => {
+        let inDark = false
+        darkSections.forEach((section) => {
+          const rect = section.getBoundingClientRect()
+          if (rect.top <= 80 && rect.bottom > 80) inDark = true
+        })
+        body.classList.toggle('is-dark-section', inDark)
+      })
+    </script>
+  </body>
+</html>

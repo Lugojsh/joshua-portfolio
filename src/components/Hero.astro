@@ -1,0 +1,217 @@
+---
+import CursorTrail from './CursorTrail.astro'
+import Grain from './ui/Grain.astro'
+
+const nameChars = 'JOSHUA LUGO'.split('')
+---
+
+<section id="hero">
+  <Grain />
+  <CursorTrail />
+
+  <div class="hero-content">
+    <h1 class="hero-name" aria-label="Joshua Lugo">
+      {
+        nameChars.map((char) => (
+          <span class="char">{char === ' ' ? ' ' : char}</span>
+        ))
+      }
+    </h1>
+    <p class="hero-tagline">Diseñador · Fotógrafo · Cineasta</p>
+  </div>
+
+  <div class="hero-bottom">
+    <p class="hero-meta-left">DISEÑO, IMAGEN &amp; MOVIMIENTO.</p>
+    <p class="hero-meta-right">
+      <span>León, Gto. · CDMX</span>
+      <span id="hero-clock"></span>
+    </p>
+  </div>
+</section>
+
+<style>
+  #hero {
+    position: relative;
+    min-height: 100svh;
+    background: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 2rem 3rem;
+    overflow: hidden;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-name {
+    font-family: var(--font-display);
+    font-size: var(--text-hero);
+    font-weight: var(--weight-black);
+    letter-spacing: var(--tracking-tight);
+    line-height: 0.9;
+    color: var(--color-text);
+    overflow: hidden;
+    display: block;
+  }
+
+  .char {
+    display: inline-block;
+    will-change: transform;
+  }
+
+  .hero-tagline {
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-top: 1.5rem;
+  }
+
+  .hero-bottom {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 2rem;
+    right: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 2;
+  }
+
+  .hero-meta-left,
+  .hero-meta-right {
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .hero-meta-right {
+    text-align: right;
+  }
+
+  @media (max-width: 640px) {
+    #hero {
+      padding: 5rem 1rem 2rem;
+    }
+
+    .hero-bottom {
+      left: 1rem;
+      right: 1rem;
+    }
+
+    .hero-meta-left {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap'
+
+  // Hero entrance animation
+  const tl = gsap.timeline({ delay: 0.1 })
+  tl.from('.hero-name .char', {
+    y: 120,
+    opacity: 0,
+    stagger: 0.04,
+    duration: 0.9,
+    ease: 'power3.out',
+  })
+    .from('.hero-tagline', { y: 30, opacity: 0, duration: 0.6 }, '-=0.4')
+    .from('.hero-bottom', { opacity: 0, duration: 0.5 }, '-=0.2')
+
+  // Real-time clock
+  const clockEl = document.getElementById('hero-clock')
+  function updateClock() {
+    if (!clockEl) return
+    const now = new Date()
+    clockEl.textContent = now.toLocaleTimeString('es-MX', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'America/Mexico_City',
+    })
+  }
+  updateClock()
+  setInterval(updateClock, 1000)
+
+  // Cursor trail — only active inside #hero
+  const hero = document.getElementById('hero')!
+  const trailImgs = document.querySelectorAll<HTMLImageElement>('.trail-img')
+
+  if (trailImgs.length > 0) {
+    let current = 0
+    let lastX = 0
+    let lastY = 0
+    let isInHero = false
+
+    const validImgs = Array.from(trailImgs).filter(
+      (img) => img.complete && img.naturalWidth > 0,
+    )
+
+    hero.addEventListener('mouseenter', () => {
+      isInHero = true
+    })
+
+    hero.addEventListener('mouseleave', () => {
+      isInHero = false
+      validImgs.forEach((img) => {
+        gsap.to(img, { opacity: 0, duration: 0.3 })
+      })
+    })
+
+    let lastTime = 0
+    hero.addEventListener('mousemove', (e) => {
+      if (!isInHero) return
+      const now = Date.now()
+      if (now - lastTime < 80) return
+      lastTime = now
+
+      const dx = e.clientX - lastX
+      const dy = e.clientY - lastY
+      const dist = Math.sqrt(dx * dx + dy * dy)
+      if (dist < 20) return
+
+      lastX = e.clientX
+      lastY = e.clientY
+
+      if (validImgs.length === 0) return
+
+      const img = validImgs[current % validImgs.length]
+      current++
+
+      const rotation = (Math.random() - 0.5) * 16
+      gsap.set(img, { x: e.clientX, y: e.clientY })
+      gsap.fromTo(
+        img,
+        { opacity: 0, scale: 0.8, rotation: rotation - 4 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotation,
+          duration: 0.4,
+          ease: 'power2.out',
+          onComplete() {
+            gsap.to(img, {
+              opacity: 0,
+              duration: 0.4,
+              delay: 0.6,
+              ease: 'power2.in',
+            })
+          },
+        },
+      )
+    })
+  }
+</script>

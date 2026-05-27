@@ -1,0 +1,220 @@
+---
+---
+
+<header id="nav" role="banner">
+  <nav class="nav-inner">
+    <a href="#hero" class="nav-wordmark">JOSHUA LUGO</a>
+
+    <div class="nav-right">
+      <button
+        class="nav-btn"
+        id="menu-toggle"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+      >
+        MENU
+      </button>
+      <a href="#contact" class="nav-cta">HABLEMOS →</a>
+    </div>
+  </nav>
+</header>
+
+<!-- Full-screen menu overlay -->
+<div id="menu-overlay" aria-hidden="true">
+  <button id="menu-close" aria-label="Cerrar menú">✕</button>
+  <nav class="menu-links">
+    <a href="#about" class="menu-link" data-close>ABOUT</a>
+    <a href="#work" class="menu-link" data-close>TRABAJO</a>
+    <a href="#branding" class="menu-link" data-close>BRANDING</a>
+    <a href="#showreel" class="menu-link" data-close>SHOWREEL</a>
+    <a href="#contact" class="menu-link" data-close>CONTACTO</a>
+  </nav>
+</div>
+
+<style>
+  #nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    padding: 0 2rem;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+
+  #nav.scrolled {
+    background: rgba(237, 237, 234, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  #nav.is-dark {
+    color: var(--color-text-dark);
+  }
+
+  #nav.is-dark.scrolled {
+    background: rgba(13, 13, 13, 0.92);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .nav-wordmark {
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: 0.875rem;
+    letter-spacing: var(--tracking-wide);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-btn,
+  .nav-cta {
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
+    background: none;
+    border: none;
+    color: inherit;
+    text-decoration: none;
+    padding: 0;
+  }
+
+  .nav-btn {
+    font-size: var(--text-meta);
+  }
+
+  .nav-cta {
+    border: 1px solid currentColor;
+    padding: 0.5rem 1.25rem;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-cta:hover {
+    background: var(--color-text);
+    color: var(--color-bg);
+  }
+
+  #nav.is-dark .nav-cta:hover {
+    background: var(--color-text-dark);
+    color: var(--color-bg-dark);
+  }
+
+  /* Menu overlay */
+  #menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--color-bg-dark);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+  }
+
+  #menu-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #menu-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    background: none;
+    border: none;
+    color: var(--color-text-dark);
+    font-size: 1.5rem;
+    font-family: var(--font-body);
+  }
+
+  .menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .menu-link {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    color: var(--color-text-dark);
+    text-decoration: none;
+    letter-spacing: var(--tracking-tight);
+    transition: opacity 0.2s;
+    line-height: 1;
+  }
+
+  .menu-link:hover {
+    opacity: 0.5;
+  }
+
+  @media (max-width: 640px) {
+    #nav {
+      padding: 0 1rem;
+    }
+    .nav-cta {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const nav = document.getElementById('nav')!
+  const menuToggle = document.getElementById('menu-toggle')!
+  const menuOverlay = document.getElementById('menu-overlay')!
+  const menuClose = document.getElementById('menu-close')!
+  const menuLinks = document.querySelectorAll('[data-close]')
+
+  // Scroll → background
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40)
+  })
+
+  // Dark section detection
+  const darkSections = document.querySelectorAll('.section-dark')
+  window.addEventListener('scroll', () => {
+    let inDark = false
+    darkSections.forEach((section) => {
+      const rect = section.getBoundingClientRect()
+      if (rect.top <= 64 && rect.bottom > 64) inDark = true
+    })
+    nav.classList.toggle('is-dark', inDark)
+  })
+
+  // Menu open/close
+  function openMenu() {
+    menuOverlay.classList.add('open')
+    menuOverlay.removeAttribute('aria-hidden')
+    menuToggle.setAttribute('aria-expanded', 'true')
+    document.body.style.overflow = 'hidden'
+  }
+
+  function closeMenu() {
+    menuOverlay.classList.remove('open')
+    menuOverlay.setAttribute('aria-hidden', 'true')
+    menuToggle.setAttribute('aria-expanded', 'false')
+    document.body.style.overflow = ''
+  }
+
+  menuToggle.addEventListener('click', openMenu)
+  menuClose.addEventListener('click', closeMenu)
+  menuLinks.forEach((link) => link.addEventListener('click', closeMenu))
+</script>

@@ -1,0 +1,23 @@
+# Build output
+dist/
+.output/
+.vercel/
+.netlify/
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+.env.production
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Astro
+.astro/

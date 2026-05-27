@@ -1,0 +1,47 @@
+---
+// Hero images for cursor trail.
+// Add JPG files to /public/images/hero/ and list their filenames here.
+// The trail script shows them near the cursor when moving inside the hero.
+const heroImages: string[] = [
+  '/images/hero/foto-01.jpg',
+  '/images/hero/foto-02.jpg',
+  '/images/hero/foto-03.jpg',
+  '/images/hero/foto-04.jpg',
+  '/images/hero/foto-05.jpg',
+  '/images/hero/foto-06.jpg',
+]
+---
+
+<div id="cursor-trail-container" aria-hidden="true">
+  {
+    heroImages.map((src, i) => (
+      <img
+        src={src}
+        alt=""
+        class="trail-img"
+        data-index={i}
+        style={`width: ${220 + i * 20}px; aspect-ratio: 3/4; object-fit: cover;`}
+      />
+    ))
+  }
+</div>
+
+<style>
+  #cursor-trail-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
+  }
+
+  .trail-img {
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+    border-radius: 2px;
+    will-change: transform, opacity;
+  }
+</style>

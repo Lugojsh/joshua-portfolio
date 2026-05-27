@@ -1,0 +1,89 @@
+---
+interface Props {
+  index: number
+  title: string
+  category: string
+  year: number
+  thumbnail: string
+}
+
+const { index, title, category, year, thumbnail } = Astro.props
+const num = String(index).padStart(2, '0')
+---
+
+<li
+  class="project-item"
+  data-thumbnail={`/images/projects/${thumbnail}`}
+>
+  <span class="project-num">[{num}]</span>
+  <span class="project-title">{title}</span>
+  <span class="project-cat">{category}</span>
+  <span class="project-year">{year}</span>
+</li>
+
+<style>
+  .project-item {
+    display: grid;
+    grid-template-columns: 4rem 1fr auto auto;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--color-border);
+    list-style: none;
+    position: relative;
+  }
+
+  .project-item:first-child {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .project-num {
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    color: var(--color-text-muted);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .project-title {
+    font-family: var(--font-display);
+    font-size: var(--text-project);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1;
+    color: var(--color-text);
+    transition: opacity 0.2s;
+  }
+
+  .project-cat,
+  .project-year {
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .project-item:hover .project-title {
+    opacity: 0.6;
+  }
+
+  @media (max-width: 768px) {
+    .project-item {
+      grid-template-columns: 3rem 1fr auto;
+    }
+
+    .project-cat {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .project-item {
+      grid-template-columns: 2.5rem 1fr;
+    }
+
+    .project-year {
+      display: none;
+    }
+  }
+</style>

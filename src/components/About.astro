@@ -1,0 +1,205 @@
+---
+import contentData from '../data/content.json'
+
+const { bio, disciplines, stats, email } = contentData
+---
+
+<section id="about">
+  <div class="about-inner">
+    <div class="about-left">
+      <span class="section-label">ABOUT</span>
+      <p class="about-bio">{bio}</p>
+      <a href="/cv/JoshuaLugo_CV.pdf" download class="cv-btn">↓ Descargar CV</a>
+    </div>
+
+    <div class="about-right">
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-number" data-count={stats.years}>0</span>
+          <span class="stat-suffix">+</span>
+          <span class="stat-label">años de experiencia</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" data-count={stats.disciplines}>0</span>
+          <span class="stat-label">disciplinas</span>
+        </div>
+      </div>
+
+      <ul class="disciplines">
+        {
+          disciplines.map((d) => (
+            <li class="discipline-item">
+              <span>{d}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  #about {
+    background: var(--color-bg);
+    padding: 8rem 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .about-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .section-label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .about-bio {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    font-weight: var(--weight-light);
+    line-height: 1.7;
+    color: var(--color-text);
+    max-width: 46ch;
+  }
+
+  .cv-btn {
+    display: inline-block;
+    margin-top: 2.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-text);
+    padding-bottom: 0.25rem;
+    transition: opacity 0.2s;
+  }
+
+  .cv-btn:hover {
+    opacity: 0.5;
+  }
+
+  .stats {
+    display: flex;
+    gap: 4rem;
+    margin-bottom: 4rem;
+  }
+
+  .stat {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: var(--weight-black);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1;
+    display: block;
+    width: 100%;
+  }
+
+  .stat-suffix {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: var(--weight-black);
+    line-height: 1;
+    vertical-align: super;
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    display: block;
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    margin-top: 0.25rem;
+  }
+
+  .disciplines {
+    list-style: none;
+  }
+
+  .discipline-item {
+    font-family: var(--font-body);
+    font-size: clamp(0.875rem, 1.2vw, 1rem);
+    font-weight: var(--weight-regular);
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .discipline-item:first-child {
+    border-top: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 768px) {
+    .about-inner {
+      grid-template-columns: 1fr;
+      gap: 4rem;
+    }
+
+    #about {
+      padding: 4rem 1rem;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+  gsap.registerPlugin(ScrollTrigger)
+
+  // Fade in left column
+  gsap.from('#about .about-left > *', {
+    scrollTrigger: { trigger: '#about', start: 'top 75%' },
+    y: 40,
+    opacity: 0,
+    stagger: 0.15,
+    duration: 0.8,
+    ease: 'power2.out',
+  })
+
+  // CountUp for stats
+  document.querySelectorAll<HTMLElement>('.stat-number').forEach((el) => {
+    const target = parseInt(el.dataset['count'] ?? '0', 10)
+    gsap.from(el, {
+      scrollTrigger: { trigger: '#about', start: 'top 70%' },
+      innerText: 0,
+      duration: 1.5,
+      ease: 'power2.out',
+      snap: { innerText: 1 },
+      onUpdate() {
+        el.innerText = String(Math.round(parseFloat(el.innerText)))
+      },
+    })
+  })
+
+  // Disciplines stagger
+  gsap.from('.discipline-item', {
+    scrollTrigger: { trigger: '.disciplines', start: 'top 80%' },
+    x: 30,
+    opacity: 0,
+    stagger: 0.07,
+    duration: 0.6,
+    ease: 'power2.out',
+  })
+</script>
