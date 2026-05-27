@@ -141,7 +141,7 @@ const brandings = brandingData as BrandingProject[]
         btn.setAttribute('aria-expanded', 'true')
         details.setAttribute('aria-hidden', 'false')
         gsap.fromTo(details, { height: 0 }, { height: 'auto', duration: 0.4, ease: 'power2.inOut' })
-        card.style.flex = '1.1'
+        card.style.flex = '0.75'
         allCards.filter((c) => c !== card).forEach((c) => {
           c.style.flex = '0.3'
           c.style.opacity = '0.25'

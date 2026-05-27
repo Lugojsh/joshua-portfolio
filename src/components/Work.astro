@@ -286,13 +286,16 @@ const projects = projectsData as Project[]
       })
 
       const viewport = document.querySelector<HTMLElement>('.carousel-viewport')!
+      let wheelCooldown = false
       viewport.addEventListener('wheel', (e) => {
-        e.preventDefault()
+        if (wheelCooldown) return
+        wheelCooldown = true
         clearInterval(timer)
         if (e.deltaY > 0) setActive(activeIndex + 1)
         else setActive(activeIndex - 1)
         timer = setInterval(() => setActive(activeIndex + 1), 3000)
-      }, { passive: false })
+        setTimeout(() => { wheelCooldown = false }, 800)
+      }, { passive: true })
     },
   })
 </script>
