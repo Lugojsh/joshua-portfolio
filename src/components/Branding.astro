@@ -38,7 +38,7 @@ const brandings = brandingData as BrandingProject[]
 
 <style>
   #branding {
-    padding: 8rem 2rem;
+    padding: 4rem 2rem;
   }
 
   .branding-inner {
@@ -60,15 +60,9 @@ const brandings = brandingData as BrandingProject[]
   }
 
   .branding-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-  }
-
-  @media (max-width: 1024px) {
-    .branding-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
   }
 
   @media (max-width: 640px) {
@@ -77,7 +71,7 @@ const brandings = brandingData as BrandingProject[]
     }
 
     .branding-grid {
-      grid-template-columns: 1fr;
+      flex-direction: column;
     }
   }
 </style>
@@ -95,5 +89,63 @@ const brandings = brandingData as BrandingProject[]
     stagger: 0.1,
     duration: 0.8,
     ease: 'power2.out',
+  })
+
+  // Autoplay videos when in viewport
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target as HTMLVideoElement
+        if (entry.isIntersecting) {
+          video.play().catch(() => undefined)
+        } else {
+          video.pause()
+        }
+      })
+    },
+    { threshold: 0.25 },
+  )
+
+  document.querySelectorAll<HTMLVideoElement>('.branding-card .card-video').forEach((v) => {
+    observer.observe(v)
+  })
+
+  // Accordion
+  const allCards = Array.from(document.querySelectorAll<HTMLElement>('.branding-card'))
+  const grid = document.querySelector<HTMLElement>('.branding-grid')!
+
+  function closeAll() {
+    allCards.forEach((c) => {
+      const d = c.querySelector<HTMLElement>('.card-details')!
+      const b = c.querySelector<HTMLButtonElement>('.card-btn')!
+      gsap.to(d, { height: 0, duration: 0.4, ease: 'power2.inOut' })
+      c.style.flex = '1'
+      c.style.opacity = '1'
+      c.classList.remove('active')
+      b.setAttribute('aria-expanded', 'false')
+      d.setAttribute('aria-hidden', 'true')
+    })
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.card-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest<HTMLElement>('.branding-card')!
+      const details = card.querySelector<HTMLElement>('.card-details')!
+      const isOpen = card.classList.contains('active')
+
+      closeAll()
+
+      if (!isOpen) {
+        card.classList.add('active')
+        btn.setAttribute('aria-expanded', 'true')
+        details.setAttribute('aria-hidden', 'false')
+        gsap.fromTo(details, { height: 0 }, { height: 'auto', duration: 0.4, ease: 'power2.inOut' })
+        card.style.flex = '1.1'
+        allCards.filter((c) => c !== card).forEach((c) => {
+          c.style.flex = '0.3'
+          c.style.opacity = '0.25'
+        })
+      }
+    })
   })
 </script>

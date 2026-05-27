@@ -1,59 +1,129 @@
 ---
+import contentData from '../data/content.json'
+const { email, phone } = contentData
+const waLink = `https://wa.me/${phone}`
 ---
 
 <section id="contact" class="section-dark">
   <div class="contact-inner">
-    <h2 class="contact-title">HABLEMOS</h2>
-    <p class="contact-sub">¿Tienes un proyecto en mente? Escríbeme.</p>
 
-    <form class="contact-form" id="contact-form" novalidate>
-      <div class="form-field">
-        <input
-          type="text"
-          name="name"
-          id="field-name"
-          placeholder="Nombre"
-          required
-          autocomplete="name"
+    <!-- Left: photo grid -->
+    <div class="contact-photos">
+      <div class="photo-large">
+        <img
+          src="/images/contact/contact-1.jpg"
+          alt=""
+          class="contact-img"
+          onload="this.style.opacity='1'"
+          onerror="this.closest('.photo-large').classList.add('photo-empty')"
         />
       </div>
-      <div class="form-field">
-        <input
-          type="email"
-          name="email"
-          id="field-email"
-          placeholder="Email"
-          required
-          autocomplete="email"
-        />
+      <div class="photos-stack">
+        <div class="photo-small">
+          <img
+            src="/images/contact/contact-2.jpg"
+            alt=""
+            class="contact-img"
+            onload="this.style.opacity='1'"
+            onerror="this.closest('.photo-small').classList.add('photo-empty')"
+          />
+        </div>
+        <div class="photo-small">
+          <img
+            src="/images/contact/contact-3.jpg"
+            alt=""
+            class="contact-img"
+            onload="this.style.opacity='1'"
+            onerror="this.closest('.photo-small').classList.add('photo-empty')"
+          />
+        </div>
       </div>
-      <div class="form-field">
-        <textarea
-          name="message"
-          id="field-message"
-          placeholder="Mensaje"
-          required
-          rows="4"
-        ></textarea>
+    </div>
+
+    <!-- Right: text + buttons -->
+    <div class="contact-right">
+      <h2 class="contact-title">HABLEMOS</h2>
+      <p class="contact-sub">
+        Gracias por llegar hasta aquí. Si tienes un proyecto en mente, una idea que quieras desarrollar o simplemente quieres conectar, me encantaría escucharte.
+      </p>
+
+      <div class="contact-btns">
+        <a href={`mailto:${email}`} class="contact-btn mail-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          {email}
+        </a>
+
+        <a href={waLink} target="_blank" rel="noopener" class="contact-btn wa-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          WhatsApp
+        </a>
       </div>
+    </div>
 
-      <button type="submit" class="submit-btn" id="submit-btn">
-        <span id="btn-text">Enviar →</span>
-      </button>
-
-      <p class="form-status" id="form-status" aria-live="polite"></p>
-    </form>
   </div>
 </section>
 
 <style>
   #contact {
-    padding: 10rem 2rem 8rem;
+    padding: 5rem 2rem;
   }
 
   .contact-inner {
     max-width: 1400px;
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  /* ── Photo grid ── */
+  .contact-photos {
+    display: grid;
+    grid-template-columns: 1.875fr 0.5fr;
+    gap: 0.75rem;
+  }
+
+  .photo-large {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .photos-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .photo-small {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .contact-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  .photo-empty {
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ── Right ── */
+  .contact-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 
   .contact-title {
@@ -63,94 +133,53 @@
     letter-spacing: var(--tracking-tight);
     line-height: 0.9;
     color: var(--color-text-dark);
-    margin-bottom: 1.5rem;
   }
 
   .contact-sub {
     font-family: var(--font-body);
-    font-size: 1rem;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
     font-weight: var(--weight-light);
+    line-height: 1.75;
     color: var(--color-text-dark-muted);
-    margin-bottom: 4rem;
-    letter-spacing: 0.02em;
+    max-width: 44ch;
   }
 
-  .contact-form {
-    max-width: 640px;
+  .contact-btns {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 1rem;
   }
 
-  .form-field {
-    border-bottom: 1px solid var(--color-text-dark-muted);
-  }
-
-  .form-field:first-of-type {
-    border-top: 1px solid var(--color-text-dark-muted);
-  }
-
-  input,
-  textarea {
-    width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    font-weight: var(--weight-light);
-    color: var(--color-text-dark);
-    padding: 1.25rem 0;
-    resize: none;
-  }
-
-  input::placeholder,
-  textarea::placeholder {
-    color: var(--color-text-dark-muted);
-    letter-spacing: 0.05em;
-  }
-
-  .submit-btn {
-    align-self: flex-start;
-    margin-top: 2.5rem;
-    background: none;
-    border: 1px solid var(--color-text-dark);
-    color: var(--color-text-dark);
+  .contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
     font-family: var(--font-body);
     font-size: var(--text-meta);
     letter-spacing: var(--tracking-wide);
-    padding: 0.75rem 2rem;
-    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+    padding: 0.9rem 1.5rem;
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--color-text-dark);
+    transition: background 0.2s, border-color 0.2s;
+    width: fit-content;
   }
 
-  .submit-btn:hover:not(:disabled) {
-    background: var(--color-text-dark);
-    color: var(--color-bg-dark);
+  .contact-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.4);
   }
 
-  .submit-btn:disabled {
-    opacity: 0.5;
-  }
+  .wa-btn svg { color: #25D366; }
 
-  .form-status {
-    margin-top: 1rem;
-    font-family: var(--font-body);
-    font-size: var(--text-meta);
-    letter-spacing: var(--tracking-wide);
-    min-height: 1.2em;
-  }
+  @media (max-width: 900px) {
+    .contact-inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
 
-  .form-status.success {
-    color: #6fcf97;
-  }
-
-  .form-status.error {
-    color: #eb5757;
-  }
-
-  @media (max-width: 640px) {
     #contact {
-      padding: 6rem 1rem 4rem;
+      padding: 4rem 1rem;
     }
   }
 </style>
@@ -161,60 +190,12 @@
 
   gsap.registerPlugin(ScrollTrigger)
 
-  gsap.from('#contact .contact-title, #contact .contact-sub, #contact .contact-form', {
+  gsap.from('.contact-photos > *, .contact-right > *', {
     scrollTrigger: { trigger: '#contact', start: 'top 75%' },
     y: 40,
     opacity: 0,
-    stagger: 0.15,
+    stagger: 0.1,
     duration: 0.8,
     ease: 'power2.out',
-  })
-
-  const form = document.getElementById('contact-form') as HTMLFormElement
-  const btnText = document.getElementById('btn-text')!
-  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement
-  const statusEl = document.getElementById('form-status')!
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault()
-
-    const data = {
-      name: (form.elements.namedItem('name') as HTMLInputElement).value.trim(),
-      email: (form.elements.namedItem('email') as HTMLInputElement).value.trim(),
-      message: (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim(),
-    }
-
-    if (!data.name || !data.email || !data.message) {
-      statusEl.textContent = 'Por favor completa todos los campos.'
-      statusEl.className = 'form-status error'
-      return
-    }
-
-    submitBtn.disabled = true
-    btnText.textContent = 'Enviando...'
-    statusEl.textContent = ''
-    statusEl.className = 'form-status'
-
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-
-      if (res.ok) {
-        statusEl.textContent = '¡Mensaje enviado! Te respondo pronto.'
-        statusEl.className = 'form-status success'
-        form.reset()
-      } else {
-        throw new Error('Server error')
-      }
-    } catch {
-      statusEl.textContent = 'Algo salió mal. Escríbeme directo a joshualugogutierrez@gmail.com'
-      statusEl.className = 'form-status error'
-    } finally {
-      submitBtn.disabled = false
-      btnText.textContent = 'Enviar →'
-    }
   })
 </script>

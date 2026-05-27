@@ -1,5 +1,4 @@
 ---
-import ProjectItem from './ProjectItem.astro'
 import projectsData from '../data/projects.json'
 
 interface Project {
@@ -18,34 +17,40 @@ const projects = projectsData as Project[]
 <section id="work">
   <div class="work-inner">
     <div class="work-header">
-      <h2 class="section-title">TRABAJO</h2>
+      <h2 class="section-title">TRABAJOS DESTACADOS</h2>
     </div>
 
-    <ul class="work-list">
-      {
-        projects.map((project, i) => (
-          <ProjectItem
-            index={i + 1}
-            title={project.title}
-            category={project.category}
-            year={project.year}
-            thumbnail={project.thumbnail}
-          />
-        ))
-      }
-    </ul>
-  </div>
+    <div class="carousel-wrap">
+      <div class="carousel-viewport">
+        {
+          projects.map((project, i) => (
+            <button
+              class="carousel-item"
+              data-index={i}
+              aria-label={project.title}
+              data-description={project.description ?? ''}
+              data-client={project.client ?? ''}
+            >
+              <span class="item-arrow">→</span>
+              <span class="item-title">{project.title}</span>
+              <span class="item-meta">{project.category} · {project.year}</span>
+            </button>
+          ))
+        }
+      </div>
 
-  <!-- Hover preview image -->
-  <div id="work-preview" aria-hidden="true">
-    <img id="work-preview-img" src="" alt="" />
+      <div class="project-info">
+        <p class="project-desc"></p>
+        <span class="project-client"></span>
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   #work {
     background: var(--color-bg);
-    padding: 8rem 2rem;
+    padding: 4rem 2rem;
     border-top: 1px solid var(--color-border);
   }
 
@@ -55,7 +60,7 @@ const projects = projectsData as Project[]
   }
 
   .work-header {
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
   }
 
   .section-title {
@@ -67,37 +72,117 @@ const projects = projectsData as Project[]
     color: var(--color-text);
   }
 
-  .work-list {
-    padding: 0;
-    margin: 0;
+  .carousel-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
   }
 
-  /* Hover preview */
-  #work-preview {
-    position: fixed;
-    top: 0;
+  .carousel-viewport {
+    position: relative;
+    height: 380px;
+    overflow: hidden;
+    perspective: 1000px;
+    perspective-origin: center center;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 22%,
+      black 78%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 22%,
+      black 78%,
+      transparent 100%
+    );
+  }
+
+  .carousel-item {
+    position: absolute;
+    top: 50%;
     left: 0;
-    pointer-events: none;
-    z-index: 20;
-    opacity: 0;
-    will-change: transform, opacity;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    text-align: left;
+    transform-origin: left center;
+    will-change: transform, filter, opacity;
   }
 
-  #work-preview-img {
-    width: 280px;
-    aspect-ratio: 4/3;
-    object-fit: cover;
-    border-radius: 2px;
-    display: block;
+  .item-arrow {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    color: var(--color-text);
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: none;
+    flex-shrink: 0;
+  }
+
+  .item-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.5vw, 3rem);
+    font-weight: var(--weight-black);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1;
+    color: var(--color-text);
+  }
+
+  .item-meta {
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  /* Right panel — project info */
+  .project-info {
+    opacity: 0;
+  }
+
+  .project-desc {
+    font-family: var(--font-body);
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    font-weight: var(--weight-light);
+    line-height: 1.7;
+    color: var(--color-text);
+    max-width: 48ch;
+    margin-bottom: 1rem;
+  }
+
+  .project-client {
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
   }
 
   @media (max-width: 768px) {
-    #work {
-      padding: 4rem 1rem;
+    .carousel-wrap {
+      grid-template-columns: 1fr;
+      gap: 2rem;
     }
 
-    #work-preview {
-      display: none;
+    .carousel-viewport {
+      height: 300px;
+    }
+
+    .project-info {
+      padding-left: 0;
+    }
+
+    #work {
+      padding: 4rem 1rem;
     }
   }
 </style>
@@ -108,48 +193,104 @@ const projects = projectsData as Project[]
 
   gsap.registerPlugin(ScrollTrigger)
 
-  // Stagger entrance
-  gsap.from('.project-item', {
-    scrollTrigger: { trigger: '.work-list', start: 'top 80%' },
-    y: 50,
-    opacity: 0,
-    stagger: 0.07,
-    duration: 0.7,
-    ease: 'power2.out',
-  })
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.carousel-item'))
+  const descEl = document.querySelector<HTMLElement>('.project-desc')!
+  const clientEl = document.querySelector<HTMLElement>('.project-client')!
+  const infoPanel = document.querySelector<HTMLElement>('.project-info')!
 
-  // Hover preview
-  const preview = document.getElementById('work-preview')!
-  const previewImg = document.getElementById('work-preview-img') as HTMLImageElement
-  const items = document.querySelectorAll<HTMLElement>('.project-item')
+  const ITEM_GAP = 88   // px between items (vertical)
 
-  let mouseX = 0
-  let mouseY = 0
+  // Project data from DOM (populated server-side; read titles & meta)
+  const projectData = items.map((item) => ({
+    title: item.querySelector('.item-title')?.textContent ?? '',
+    meta: item.querySelector('.item-meta')?.textContent ?? '',
+  }))
 
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX
-    mouseY = e.clientY
-    gsap.set(preview, {
-      x: mouseX + 24,
-      y: mouseY - 80,
+  let activeIndex = 0
+  let isAnimating = false
+
+  function setActive(idx: number) {
+    const n = items.length
+    activeIndex = ((idx % n) + n) % n
+
+    items.forEach((item, i) => {
+      let offset = i - activeIndex
+      // Wrap offset so items loop: e.g. with 5 items, offset 3 becomes -2
+      if (offset > n / 2) offset -= n
+      if (offset < -n / 2) offset += n
+      const absOffset = Math.abs(offset)
+      const arrow = item.querySelector<HTMLElement>('.item-arrow')!
+
+      gsap.to(item, {
+        y: offset * ITEM_GAP - (item.offsetHeight / 2),
+        scale: Math.max(0.52, 1 - absOffset * 0.18),
+        filter: `blur(${Math.min(7, absOffset * 2.2)}px)`,
+        opacity: Math.max(0.08, 1 - absOffset * 0.28),
+        rotateX: `${offset * -12}deg`,
+        duration: 0.75,
+        ease: 'power3.out',
+      })
+
+      gsap.to(arrow, {
+        opacity: activeIndex === i ? 1 : 0,
+        x: activeIndex === i ? 0 : -14,
+        duration: 0.5,
+        ease: 'power2.out',
+      })
     })
-  })
 
+    // Update info panel
+    const activeItem = items[activeIndex]
+    const desc = activeItem.getAttribute('aria-label') ?? ''
+    // We'll pull description from data attributes added below
+    const descText = activeItem.dataset['description'] ?? ''
+    const clientText = activeItem.dataset['client'] ?? ''
+
+    gsap.to(infoPanel, {
+      opacity: 0,
+      y: 10,
+      duration: 0.2,
+      onComplete() {
+        descEl.textContent = descText
+        clientEl.textContent = clientText
+        gsap.to(infoPanel, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' })
+      },
+    })
+  }
+
+  // Initial position (all stacked at center, invisible)
   items.forEach((item) => {
-    const src = item.dataset['thumbnail'] ?? ''
+    gsap.set(item, { y: -item.offsetHeight / 2, opacity: 0, scale: 0.8 })
+  })
 
-    item.addEventListener('mouseenter', () => {
-      if (!src) return
-      previewImg.src = src
-      gsap.fromTo(
-        preview,
-        { scale: 0.92, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.35, ease: 'power2.out' },
-      )
-    })
+  // Entrance animation
+  gsap.to('.work-inner', {
+    scrollTrigger: { trigger: '#work', start: 'top 75%', once: true },
+    opacity: 1,
+    duration: 0.01,
+    onComplete() {
+      setActive(0)
+      // Auto-advance
+      let timer = setInterval(() => setActive(activeIndex + 1), 3000)
 
-    item.addEventListener('mouseleave', () => {
-      gsap.to(preview, { opacity: 0, duration: 0.25, ease: 'power2.in' })
-    })
+      // Click to select
+      items.forEach((item, i) => {
+        item.addEventListener('click', () => {
+          clearInterval(timer)
+          setActive(i)
+          timer = setInterval(() => setActive(activeIndex + 1), 3000)
+        })
+      })
+
+      // Scroll / wheel to navigate
+      const viewport = document.querySelector<HTMLElement>('.carousel-viewport')!
+      viewport.addEventListener('wheel', (e) => {
+        e.preventDefault()
+        clearInterval(timer)
+        if (e.deltaY > 0) setActive(activeIndex + 1)
+        else setActive(activeIndex - 1)
+        timer = setInterval(() => setActive(activeIndex + 1), 3000)
+      }, { passive: false })
+    },
   })
 </script>

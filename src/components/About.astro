@@ -1,7 +1,10 @@
 ---
 import contentData from '../data/content.json'
 
-const { bio, disciplines, stats, email } = contentData
+const { bio, disciplines, stats, aboutPhoto } = contentData
+
+const col1 = disciplines.slice(0, 3)
+const col2 = disciplines.slice(3)
 ---
 
 <section id="about">
@@ -9,31 +12,44 @@ const { bio, disciplines, stats, email } = contentData
     <div class="about-left">
       <span class="section-label">ABOUT</span>
       <p class="about-bio">{bio}</p>
+      <img
+        src={`/images/${aboutPhoto}`}
+        alt="Joshua Lugo"
+        class="about-photo"
+        onload="this.style.display='block'"
+        onerror="this.style.display='none'"
+      />
       <a href="/cv/JoshuaLugo_CV.pdf" download class="cv-btn">↓ Descargar CV</a>
     </div>
 
     <div class="about-right">
       <div class="stats">
         <div class="stat">
-          <span class="stat-number" data-count={stats.years}>0</span>
-          <span class="stat-suffix">+</span>
+          <div class="stat-value">
+            <span class="stat-number" data-count={stats.years}>{stats.years}</span><span class="stat-suffix">+</span>
+          </div>
           <span class="stat-label">años de experiencia</span>
         </div>
         <div class="stat">
-          <span class="stat-number" data-count={stats.disciplines}>0</span>
+          <div class="stat-value">
+            <span class="stat-number" data-count={stats.disciplines}>{stats.disciplines}</span>
+          </div>
           <span class="stat-label">disciplinas</span>
         </div>
       </div>
 
-      <ul class="disciplines">
-        {
-          disciplines.map((d) => (
-            <li class="discipline-item">
-              <span>{d}</span>
-            </li>
-          ))
-        }
-      </ul>
+      <div class="disciplines-grid">
+        <ul class="disciplines">
+          {col1.map((d) => (
+            <li class="discipline-item"><span>{d}</span></li>
+          ))}
+        </ul>
+        <ul class="disciplines">
+          {col2.map((d) => (
+            <li class="discipline-item"><span>{d}</span></li>
+          ))}
+        </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -41,7 +57,7 @@ const { bio, disciplines, stats, email } = contentData
 <style>
   #about {
     background: var(--color-bg);
-    padding: 8rem 2rem;
+    padding: 4rem 2rem;
     border-top: 1px solid var(--color-border);
   }
 
@@ -72,6 +88,14 @@ const { bio, disciplines, stats, email } = contentData
     max-width: 46ch;
   }
 
+  .about-photo {
+    display: none;
+    width: 100%;
+    max-width: 46ch;
+    margin-top: 2rem;
+    object-fit: cover;
+  }
+
   .cv-btn {
     display: inline-block;
     margin-top: 2.5rem;
@@ -97,9 +121,15 @@ const { bio, disciplines, stats, email } = contentData
 
   .stat {
     display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .stat-value {
+    display: flex;
     align-items: baseline;
-    gap: 0;
-    flex-wrap: wrap;
+    gap: 0.1em;
+    line-height: 1;
   }
 
   .stat-number {
@@ -108,27 +138,26 @@ const { bio, disciplines, stats, email } = contentData
     font-weight: var(--weight-black);
     letter-spacing: var(--tracking-tight);
     line-height: 1;
-    display: block;
-    width: 100%;
   }
 
   .stat-suffix {
     font-family: var(--font-display);
-    font-size: clamp(3rem, 5vw, 5rem);
+    font-size: clamp(1.5rem, 2.5vw, 2.5rem);
     font-weight: var(--weight-black);
     line-height: 1;
-    vertical-align: super;
-    font-size: 1.5rem;
   }
 
   .stat-label {
-    display: block;
-    width: 100%;
     font-family: var(--font-body);
     font-size: var(--text-meta);
     letter-spacing: var(--tracking-wide);
     color: var(--color-text-muted);
-    margin-top: 0.25rem;
+  }
+
+  .disciplines-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 2rem;
   }
 
   .disciplines {
@@ -141,9 +170,6 @@ const { bio, disciplines, stats, email } = contentData
     font-weight: var(--weight-regular);
     padding: 0.875rem 0;
     border-bottom: 1px solid var(--color-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 
   .discipline-item:first-child {
@@ -168,7 +194,6 @@ const { bio, disciplines, stats, email } = contentData
 
   gsap.registerPlugin(ScrollTrigger)
 
-  // Fade in left column
   gsap.from('#about .about-left > *', {
     scrollTrigger: { trigger: '#about', start: 'top 75%' },
     y: 40,
@@ -178,24 +203,25 @@ const { bio, disciplines, stats, email } = contentData
     ease: 'power2.out',
   })
 
-  // CountUp for stats
   document.querySelectorAll<HTMLElement>('.stat-number').forEach((el) => {
     const target = parseInt(el.dataset['count'] ?? '0', 10)
-    gsap.from(el, {
-      scrollTrigger: { trigger: '#about', start: 'top 70%' },
-      innerText: 0,
-      duration: 1.5,
-      ease: 'power2.out',
-      snap: { innerText: 1 },
-      onUpdate() {
-        el.innerText = String(Math.round(parseFloat(el.innerText)))
-      },
-    })
+    gsap.fromTo(el,
+      { innerText: 0 },
+      {
+        scrollTrigger: { trigger: '#about', start: 'top 70%' },
+        innerText: target,
+        duration: 1.5,
+        ease: 'power2.out',
+        snap: { innerText: 1 },
+        onUpdate() {
+          el.innerText = String(Math.round(parseFloat(el.innerText)))
+        },
+      }
+    )
   })
 
-  // Disciplines stagger
   gsap.from('.discipline-item', {
-    scrollTrigger: { trigger: '.disciplines', start: 'top 80%' },
+    scrollTrigger: { trigger: '.disciplines-grid', start: 'top 80%' },
     x: 30,
     opacity: 0,
     stagger: 0.07,

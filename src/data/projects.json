@@ -25,5 +25,23 @@
     "client": "Cliente",
     "thumbnail": "proyecto-03.jpg",
     "description": "Descripción breve del proyecto."
+  },
+  {
+    "id": "proyecto-04",
+    "title": "NOMBRE DEL PROYECTO",
+    "category": "Fotografía",
+    "year": 2023,
+    "client": "Cliente",
+    "thumbnail": "proyecto-04.jpg",
+    "description": "Descripción breve del proyecto."
+  },
+  {
+    "id": "proyecto-05",
+    "title": "NOMBRE DEL PROYECTO",
+    "category": "Branding",
+    "year": 2023,
+    "client": "Cliente",
+    "thumbnail": "proyecto-05.jpg",
+    "description": "Descripción breve del proyecto."
   }
 ]

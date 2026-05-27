@@ -5,36 +5,64 @@ interface Props {
   category: string
   year: number
   thumbnail: string
+  description?: string
+  client?: string
 }
 
-const { index, title, category, year, thumbnail } = Astro.props
+const { index, title, category, year, thumbnail, description = '', client = '' } = Astro.props
 const num = String(index).padStart(2, '0')
 ---
 
 <li
   class="project-item"
   data-thumbnail={`/images/projects/${thumbnail}`}
+  data-description={description}
+  data-client={client}
 >
-  <span class="project-num">[{num}]</span>
-  <span class="project-title">{title}</span>
-  <span class="project-cat">{category}</span>
-  <span class="project-year">{year}</span>
+  <button class="project-row" aria-expanded="false">
+    <span class="project-num">[{num}]</span>
+    <span class="project-title">{title}</span>
+    <span class="project-cat">{category}</span>
+    <span class="project-year">{year}</span>
+  </button>
+
+  <div class="project-details" aria-hidden="true">
+    {description && <p class="project-desc">{description}</p>}
+    {client && <span class="project-client">{client}</span>}
+  </div>
 </li>
 
 <style>
   .project-item {
-    display: grid;
-    grid-template-columns: 4rem 1fr auto auto;
-    gap: 1.5rem;
-    align-items: center;
-    padding: 1.25rem 0;
-    border-bottom: 1px solid var(--color-border);
     list-style: none;
-    position: relative;
+    border-bottom: 1px solid var(--color-border);
+    transition: opacity 0.4s ease;
   }
 
   .project-item:first-child {
     border-top: 1px solid var(--color-border);
+  }
+
+  /* Inactive state when another is open */
+  .work-list.has-active .project-item:not(.active) {
+    opacity: 0.3;
+  }
+
+  .work-list.has-active .project-item:not(.active) .project-title {
+    font-size: clamp(1.1rem, 2vw, 2rem);
+  }
+
+  .project-row {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 1.25rem 0;
+    display: grid;
+    grid-template-columns: 4rem 1fr auto auto;
+    gap: 1.5rem;
+    align-items: center;
+    text-align: left;
+    color: inherit;
   }
 
   .project-num {
@@ -51,7 +79,7 @@ const num = String(index).padStart(2, '0')
     letter-spacing: var(--tracking-tight);
     line-height: 1;
     color: var(--color-text);
-    transition: opacity 0.2s;
+    transition: font-size 0.4s ease, opacity 0.3s;
   }
 
   .project-cat,
@@ -61,29 +89,63 @@ const num = String(index).padStart(2, '0')
     letter-spacing: var(--tracking-wide);
     color: var(--color-text-muted);
     white-space: nowrap;
+    transition: opacity 0.3s;
   }
 
-  .project-item:hover .project-title {
-    opacity: 0.6;
+  .project-item.active .project-cat,
+  .project-item.active .project-year {
+    opacity: 0.5;
+  }
+
+  /* Expandable details */
+  .project-details {
+    overflow: hidden;
+    height: 0;
+    padding-left: calc(4rem + 1.5rem);
+    padding-right: 0;
+  }
+
+  .project-desc {
+    font-family: var(--font-body);
+    font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+    font-weight: var(--weight-light);
+    line-height: 1.7;
+    color: var(--color-text);
+    padding-bottom: 1.5rem;
+    max-width: 60ch;
+  }
+
+  .project-client {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    padding-bottom: 1.5rem;
+    margin-top: -0.5rem;
   }
 
   @media (max-width: 768px) {
-    .project-item {
+    .project-row {
       grid-template-columns: 3rem 1fr auto;
     }
-
     .project-cat {
       display: none;
+    }
+    .project-details {
+      padding-left: calc(3rem + 1.5rem);
     }
   }
 
   @media (max-width: 480px) {
-    .project-item {
+    .project-row {
       grid-template-columns: 2.5rem 1fr;
     }
-
     .project-year {
       display: none;
+    }
+    .project-details {
+      padding-left: calc(2.5rem + 1.5rem);
     }
   }
 </style>

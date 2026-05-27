@@ -13,18 +13,16 @@ const nameChars = 'JOSHUA LUGO'.split('')
     <h1 class="hero-name" aria-label="Joshua Lugo">
       {
         nameChars.map((char) => (
-          <span class="char">{char === ' ' ? ' ' : char}</span>
+          <span class="char">{char === ' ' ? '  ' : char}</span>
         ))
       }
     </h1>
-    <p class="hero-tagline">Diseñador · Fotógrafo · Cineasta</p>
   </div>
 
   <div class="hero-bottom">
     <p class="hero-meta-left">DISEÑO, IMAGEN &amp; MOVIMIENTO.</p>
     <p class="hero-meta-right">
-      <span>León, Gto. · CDMX</span>
-      <span id="hero-clock"></span>
+      CDMX — <span id="hero-clock"></span>
     </p>
   </div>
 </section>
@@ -37,6 +35,7 @@ const nameChars = 'JOSHUA LUGO'.split('')
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     padding: 6rem 2rem 3rem;
     overflow: hidden;
   }
@@ -44,6 +43,7 @@ const nameChars = 'JOSHUA LUGO'.split('')
   .hero-content {
     position: relative;
     z-index: 2;
+    text-align: center;
   }
 
   .hero-name {
@@ -60,16 +60,6 @@ const nameChars = 'JOSHUA LUGO'.split('')
   .char {
     display: inline-block;
     will-change: transform;
-  }
-
-  .hero-tagline {
-    font-family: var(--font-body);
-    font-size: var(--text-meta);
-    font-weight: var(--weight-regular);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    margin-top: 1.5rem;
   }
 
   .hero-bottom {
@@ -91,13 +81,6 @@ const nameChars = 'JOSHUA LUGO'.split('')
     letter-spacing: var(--tracking-wide);
     color: var(--color-text-muted);
     text-transform: uppercase;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .hero-meta-right {
-    text-align: right;
   }
 
   @media (max-width: 640px) {
@@ -119,7 +102,6 @@ const nameChars = 'JOSHUA LUGO'.split('')
 <script>
   import gsap from 'gsap'
 
-  // Hero entrance animation
   const tl = gsap.timeline({ delay: 0.1 })
   tl.from('.hero-name .char', {
     y: 120,
@@ -128,7 +110,6 @@ const nameChars = 'JOSHUA LUGO'.split('')
     duration: 0.9,
     ease: 'power3.out',
   })
-    .from('.hero-tagline', { y: 30, opacity: 0, duration: 0.6 }, '-=0.4')
     .from('.hero-bottom', { opacity: 0, duration: 0.5 }, '-=0.2')
 
   // Real-time clock
@@ -160,15 +141,11 @@ const nameChars = 'JOSHUA LUGO'.split('')
       (img) => img.complete && img.naturalWidth > 0,
     )
 
-    hero.addEventListener('mouseenter', () => {
-      isInHero = true
-    })
+    hero.addEventListener('mouseenter', () => { isInHero = true })
 
     hero.addEventListener('mouseleave', () => {
       isInHero = false
-      validImgs.forEach((img) => {
-        gsap.to(img, { opacity: 0, duration: 0.3 })
-      })
+      validImgs.forEach((img) => { gsap.to(img, { opacity: 0, duration: 0.3 }) })
     })
 
     let lastTime = 0
@@ -180,12 +157,10 @@ const nameChars = 'JOSHUA LUGO'.split('')
 
       const dx = e.clientX - lastX
       const dy = e.clientY - lastY
-      const dist = Math.sqrt(dx * dx + dy * dy)
-      if (dist < 20) return
+      if (Math.sqrt(dx * dx + dy * dy) < 20) return
 
       lastX = e.clientX
       lastY = e.clientY
-
       if (validImgs.length === 0) return
 
       const img = validImgs[current % validImgs.length]
@@ -197,18 +172,9 @@ const nameChars = 'JOSHUA LUGO'.split('')
         img,
         { opacity: 0, scale: 0.8, rotation: rotation - 4 },
         {
-          opacity: 1,
-          scale: 1,
-          rotation,
-          duration: 0.4,
-          ease: 'power2.out',
+          opacity: 1, scale: 1, rotation, duration: 0.4, ease: 'power2.out',
           onComplete() {
-            gsap.to(img, {
-              opacity: 0,
-              duration: 0.4,
-              delay: 0.6,
-              ease: 'power2.in',
-            })
+            gsap.to(img, { opacity: 0, duration: 0.4, delay: 0.6, ease: 'power2.in' })
           },
         },
       )

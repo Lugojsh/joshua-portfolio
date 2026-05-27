@@ -4,6 +4,7 @@
   "bio": "Soy Joshua Lugo, diseñador digital y cineasta con más de 5 años creando desde León, México. Me muevo entre el diseño, la fotografía y el video con un ojo puesto en los detalles y el otro en el impacto.",
   "location": "León, Gto. / CDMX",
   "email": "joshualugogutierrez@gmail.com",
+  "phone": "521XXXXXXXXXX",
   "stats": {
     "years": 5,
     "disciplines": 6
@@ -21,6 +22,7 @@
     "vimeo": "",
     "linkedin": ""
   },
+  "aboutPhoto": "about-photo.png",
   "showreel": {
     "vimeoId": "",
     "poster": "showreel-poster.jpg"
