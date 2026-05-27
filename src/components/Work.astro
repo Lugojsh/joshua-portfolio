@@ -116,6 +116,7 @@ const projects = projectsData as Project[]
     text-align: left;
     transform-origin: left center;
     will-change: transform, filter, opacity;
+    opacity: 0;
   }
 
   .item-arrow {
@@ -198,82 +199,84 @@ const projects = projectsData as Project[]
   const clientEl = document.querySelector<HTMLElement>('.project-client')!
   const infoPanel = document.querySelector<HTMLElement>('.project-info')!
 
-  const ITEM_GAP = 88   // px between items (vertical)
-
-  // Project data from DOM (populated server-side; read titles & meta)
-  const projectData = items.map((item) => ({
-    title: item.querySelector('.item-title')?.textContent ?? '',
-    meta: item.querySelector('.item-meta')?.textContent ?? '',
-  }))
-
+  const ITEM_GAP = 88
   let activeIndex = 0
-  let isAnimating = false
 
-  function setActive(idx: number) {
+  function setActive(idx: number, animate = true) {
     const n = items.length
     activeIndex = ((idx % n) + n) % n
 
     items.forEach((item, i) => {
       let offset = i - activeIndex
-      // Wrap offset so items loop: e.g. with 5 items, offset 3 becomes -2
       if (offset > n / 2) offset -= n
       if (offset < -n / 2) offset += n
       const absOffset = Math.abs(offset)
       const arrow = item.querySelector<HTMLElement>('.item-arrow')!
+      const h = item.offsetHeight || 36
 
-      gsap.to(item, {
-        y: offset * ITEM_GAP - (item.offsetHeight / 2),
+      const props = {
+        y: offset * ITEM_GAP - h / 2,
         scale: Math.max(0.52, 1 - absOffset * 0.18),
         filter: `blur(${Math.min(7, absOffset * 2.2)}px)`,
         opacity: Math.max(0.08, 1 - absOffset * 0.28),
         rotateX: `${offset * -12}deg`,
-        duration: 0.75,
-        ease: 'power3.out',
-      })
+      }
 
-      gsap.to(arrow, {
-        opacity: activeIndex === i ? 1 : 0,
-        x: activeIndex === i ? 0 : -14,
-        duration: 0.5,
-        ease: 'power2.out',
-      })
+      if (animate) {
+        gsap.to(item, { ...props, duration: 0.75, ease: 'power3.out', overwrite: 'auto' })
+        gsap.to(arrow, {
+          opacity: offset === 0 ? 1 : 0,
+          x: offset === 0 ? 0 : -14,
+          duration: 0.5,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        })
+      } else {
+        gsap.set(item, props)
+        gsap.set(arrow, { opacity: offset === 0 ? 1 : 0, x: offset === 0 ? 0 : -14 })
+      }
     })
 
-    // Update info panel
     const activeItem = items[activeIndex]
-    const desc = activeItem.getAttribute('aria-label') ?? ''
-    // We'll pull description from data attributes added below
     const descText = activeItem.dataset['description'] ?? ''
     const clientText = activeItem.dataset['client'] ?? ''
 
-    gsap.to(infoPanel, {
-      opacity: 0,
-      y: 10,
-      duration: 0.2,
-      onComplete() {
-        descEl.textContent = descText
-        clientEl.textContent = clientText
-        gsap.to(infoPanel, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' })
-      },
-    })
+    if (animate) {
+      gsap.to(infoPanel, {
+        opacity: 0, y: 10, duration: 0.2, overwrite: 'auto',
+        onComplete() {
+          descEl.textContent = descText
+          clientEl.textContent = clientText
+          gsap.to(infoPanel, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' })
+        },
+      })
+    } else {
+      descEl.textContent = descText
+      clientEl.textContent = clientText
+    }
   }
 
-  // Initial position (all stacked at center, invisible)
-  items.forEach((item) => {
-    gsap.set(item, { y: -item.offsetHeight / 2, opacity: 0, scale: 0.8 })
-  })
+  let carouselReady = false
 
-  // Entrance animation
-  gsap.to('.work-inner', {
-    scrollTrigger: { trigger: '#work', start: 'top 75%', once: true },
-    opacity: 1,
-    duration: 0.01,
-    onComplete() {
-      setActive(0)
+  ScrollTrigger.create({
+    trigger: '#work',
+    start: 'top 75%',
+    once: true,
+    onEnter() {
+      if (carouselReady) return
+      carouselReady = true
+
+      // Position all items instantly — offsetHeight is reliable at this point
+      setActive(0, false)
+
+      // Fade each item in from 0 to its correct opacity
+      items.forEach((item) => {
+        gsap.from(item, { opacity: 0, duration: 0.5, ease: 'power2.out' })
+      })
+
       // Auto-advance
       let timer = setInterval(() => setActive(activeIndex + 1), 3000)
 
-      // Click to select
       items.forEach((item, i) => {
         item.addEventListener('click', () => {
           clearInterval(timer)
@@ -282,7 +285,6 @@ const projects = projectsData as Project[]
         })
       })
 
-      // Scroll / wheel to navigate
       const viewport = document.querySelector<HTMLElement>('.carousel-viewport')!
       viewport.addEventListener('wheel', (e) => {
         e.preventDefault()

@@ -83,7 +83,8 @@ const brandings = brandingData as BrandingProject[]
   gsap.registerPlugin(ScrollTrigger)
 
   gsap.from('.branding-card', {
-    scrollTrigger: { trigger: '.branding-grid', start: 'top 75%' },
+    immediateRender: false,
+    scrollTrigger: { trigger: '.branding-grid', start: 'top 75%', once: true },
     y: 60,
     opacity: 0,
     stagger: 0.1,
