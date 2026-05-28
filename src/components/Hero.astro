@@ -1,12 +1,23 @@
 ---
 import CursorTrail from './CursorTrail.astro'
 import Grain from './ui/Grain.astro'
-
 ---
 
-<section id="hero">
+<section id="hero" class="section-dark">
   <Grain />
   <CursorTrail />
+
+  <!-- Rolling shapes -->
+  <div class="rolling-shapes" aria-hidden="true">
+    <div class="rs rs-1"></div>
+    <div class="rs rs-2"></div>
+    <div class="rs rs-3"></div>
+    <div class="rs rs-4"></div>
+    <div class="rs rs-5"></div>
+    <div class="rs rs-6"></div>
+    <div class="rs rs-7"></div>
+    <div class="rs rs-8"></div>
+  </div>
 
   <div class="hero-content">
     <h1 class="hero-name" aria-label="Joshua Lugo">
@@ -27,7 +38,7 @@ import Grain from './ui/Grain.astro'
   #hero {
     position: relative;
     min-height: 100svh;
-    background: var(--color-bg);
+    background: var(--color-bg-dark);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -48,7 +59,7 @@ import Grain from './ui/Grain.astro'
     font-weight: var(--weight-black);
     letter-spacing: var(--tracking-tight);
     line-height: 0.9;
-    color: var(--color-text);
+    color: var(--color-text-dark);
     display: flex;
     align-items: flex-end;
     gap: 0.22em;
@@ -82,8 +93,111 @@ import Grain from './ui/Grain.astro'
     font-size: var(--text-meta);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
-    color: var(--color-text-muted);
+    color: var(--color-text-dark-muted);
     text-transform: uppercase;
+  }
+
+  /* ── Rolling shapes ── */
+  .rolling-shapes {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .rs {
+    position: absolute;
+  }
+
+  @keyframes roll-r {
+    from { transform: translateX(-220px) rotate(0deg); }
+    to   { transform: translateX(calc(100vw + 220px)) rotate(720deg); }
+  }
+
+  @keyframes roll-l {
+    from { transform: translateX(calc(100vw + 220px)) rotate(0deg); }
+    to   { transform: translateX(-220px) rotate(-720deg); }
+  }
+
+  /* Red circle — large */
+  .rs-1 {
+    width: 78px; height: 78px;
+    border-radius: 50%;
+    background: #E03A2F;
+    bottom: 9%;
+    animation: roll-l 7s ease-in-out infinite;
+    animation-delay: 0s;
+  }
+
+  /* Blue pill */
+  .rs-2 {
+    width: 108px; height: 64px;
+    border-radius: 32px;
+    background: #4A90D9;
+    bottom: 4%;
+    animation: roll-r 9s ease-in-out infinite;
+    animation-delay: -3.2s;
+  }
+
+  /* Yellow circle — small */
+  .rs-3 {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: #F5C418;
+    bottom: 18%;
+    animation: roll-r 5.5s ease-in-out infinite;
+    animation-delay: -1.8s;
+  }
+
+  /* Green pill */
+  .rs-4 {
+    width: 92px; height: 56px;
+    border-radius: 28px;
+    background: #4CAF50;
+    bottom: 7%;
+    animation: roll-l 8.5s ease-in-out infinite;
+    animation-delay: -5.5s;
+  }
+
+  /* Blue circle — medium */
+  .rs-5 {
+    width: 86px; height: 86px;
+    border-radius: 50%;
+    background: #4A90D9;
+    bottom: 24%;
+    animation: roll-l 10s ease-in-out infinite;
+    animation-delay: -2.5s;
+  }
+
+  /* Red pill — small */
+  .rs-6 {
+    width: 64px; height: 40px;
+    border-radius: 20px;
+    background: #E03A2F;
+    bottom: 13%;
+    animation: roll-r 7s ease-in-out infinite;
+    animation-delay: -6.5s;
+  }
+
+  /* Yellow pill */
+  .rs-7 {
+    width: 88px; height: 54px;
+    border-radius: 27px;
+    background: #F5C418;
+    bottom: 5%;
+    animation: roll-l 9.5s ease-in-out infinite;
+    animation-delay: -4s;
+  }
+
+  /* Green circle — small */
+  .rs-8 {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: #4CAF50;
+    bottom: 30%;
+    animation: roll-r 6.5s ease-in-out infinite;
+    animation-delay: -8s;
   }
 
   @media (max-width: 640px) {
@@ -104,6 +218,10 @@ import Grain from './ui/Grain.astro'
     }
 
     .hero-meta-left {
+      display: none;
+    }
+
+    .rs-5, .rs-8 {
       display: none;
     }
   }
