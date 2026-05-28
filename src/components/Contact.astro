@@ -182,6 +182,30 @@ const waLink = `https://wa.me/${phone}`
       padding: 4rem 1rem;
     }
   }
+
+  @media (max-width: 640px) {
+    .contact-photos {
+      grid-template-columns: 1fr;
+    }
+
+    .photos-stack {
+      flex-direction: row;
+    }
+
+    .photo-small {
+      aspect-ratio: 1 / 1;
+      flex: 1;
+    }
+
+    .contact-btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .contact-btns {
+      gap: 0.75rem;
+    }
+  }
 </style>
 
 <script>

@@ -18,7 +18,7 @@
   --font-body: 'Inter', sans-serif;
 
   --text-hero:    clamp(5rem, 12vw, 14rem);
-  --text-section: clamp(3rem, 7vw, 8rem);
+  --text-section: clamp(2.2rem, 7vw, 8rem);
   --text-project: clamp(1.8rem, 3.5vw, 4rem);
   --text-body:    1rem;
   --text-meta:    0.75rem;
@@ -100,6 +100,12 @@ body.is-dark-section .cursor-dot {
 .section-dark {
   background-color: var(--color-bg-dark);
   color: var(--color-text-dark);
+}
+
+/* Touch devices — restore native cursor, hide dot */
+@media (pointer: coarse) {
+  html { cursor: auto; }
+  .cursor-dot { display: none; }
 }
 
 /* Scrollbar */

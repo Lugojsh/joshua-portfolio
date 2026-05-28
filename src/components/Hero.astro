@@ -2,7 +2,6 @@
 import CursorTrail from './CursorTrail.astro'
 import Grain from './ui/Grain.astro'
 
-const nameChars = 'JOSHUA LUGO'.split('')
 ---
 
 <section id="hero">
@@ -11,11 +10,8 @@ const nameChars = 'JOSHUA LUGO'.split('')
 
   <div class="hero-content">
     <h1 class="hero-name" aria-label="Joshua Lugo">
-      {
-        nameChars.map((char) => (
-          <span class="char">{char === ' ' ? '  ' : char}</span>
-        ))
-      }
+      <span class="word-wrap"><span class="word">JOSHUA</span></span>
+      <span class="word-wrap"><span class="word">LUGO</span></span>
     </h1>
   </div>
 
@@ -53,12 +49,19 @@ const nameChars = 'JOSHUA LUGO'.split('')
     letter-spacing: var(--tracking-tight);
     line-height: 0.9;
     color: var(--color-text);
-    overflow: hidden;
-    display: block;
+    display: flex;
+    align-items: flex-end;
+    gap: 0.22em;
   }
 
-  .char {
-    display: inline-block;
+  .word-wrap {
+    display: block;
+    overflow: hidden;
+    line-height: 0.92;
+  }
+
+  .word {
+    display: block;
     will-change: transform;
   }
 
@@ -85,7 +88,14 @@ const nameChars = 'JOSHUA LUGO'.split('')
 
   @media (max-width: 640px) {
     #hero {
-      padding: 5rem 1rem 2rem;
+      padding: 5rem 1.25rem 2rem;
+    }
+
+    .hero-name {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.05em;
+      font-size: clamp(3.5rem, 20vw, 6rem);
     }
 
     .hero-bottom {
@@ -102,15 +112,14 @@ const nameChars = 'JOSHUA LUGO'.split('')
 <script>
   import gsap from 'gsap'
 
-  const tl = gsap.timeline({ delay: 0.1 })
-  tl.from('.hero-name .char', {
-    y: 120,
-    opacity: 0,
-    stagger: 0.04,
-    duration: 0.9,
-    ease: 'power3.out',
+  const tl = gsap.timeline({ delay: 0.15 })
+  tl.from('.hero-name .word', {
+    yPercent: 115,
+    duration: 1.1,
+    stagger: 0.13,
+    ease: 'power4.out',
   })
-    .from('.hero-bottom', { opacity: 0, duration: 0.5 }, '-=0.2')
+    .from('.hero-bottom', { opacity: 0, y: 8, duration: 0.5, ease: 'power2.out' }, '-=0.5')
 
   // Real-time clock
   const clockEl = document.getElementById('hero-clock')
