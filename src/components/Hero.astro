@@ -1,6 +1,9 @@
 ---
 import CursorTrail from './CursorTrail.astro'
 import Grain from './ui/Grain.astro'
+
+const word1 = 'JOSHUA'.split('')
+const word2 = 'LUGO'.split('')
 ---
 
 <section id="hero" class="section-dark">
@@ -21,8 +24,12 @@ import Grain from './ui/Grain.astro'
 
   <div class="hero-content">
     <h1 class="hero-name" aria-label="Joshua Lugo">
-      <span class="word-wrap"><span class="word">JOSHUA</span></span>
-      <span class="word-wrap"><span class="word">LUGO</span></span>
+      <span class="hero-word">
+        { word1.map((c) => <span class="char">{c}</span>) }
+      </span>
+      <span class="hero-word">
+        { word2.map((c) => <span class="char">{c}</span>) }
+      </span>
     </h1>
   </div>
 
@@ -65,15 +72,13 @@ import Grain from './ui/Grain.astro'
     gap: 0.22em;
   }
 
-  .word-wrap {
-    display: block;
-    overflow: hidden;
-    line-height: 0.92;
+  .hero-word {
+    display: inline-flex;
   }
 
-  .word {
-    display: block;
-    will-change: transform;
+  .char {
+    display: inline-block;
+    will-change: transform, filter, opacity;
   }
 
   .hero-bottom {
@@ -120,17 +125,13 @@ import Grain from './ui/Grain.astro'
     to   { transform: translateX(-220px) rotate(-720deg); }
   }
 
-  /* Red circle — large */
   .rs-1 {
     width: 78px; height: 78px;
     border-radius: 50%;
     background: #E03A2F;
     bottom: 9%;
     animation: roll-l 7s ease-in-out infinite;
-    animation-delay: 0s;
   }
-
-  /* Blue pill */
   .rs-2 {
     width: 108px; height: 64px;
     border-radius: 32px;
@@ -139,8 +140,6 @@ import Grain from './ui/Grain.astro'
     animation: roll-r 9s ease-in-out infinite;
     animation-delay: -3.2s;
   }
-
-  /* Yellow circle — small */
   .rs-3 {
     width: 52px; height: 52px;
     border-radius: 50%;
@@ -149,8 +148,6 @@ import Grain from './ui/Grain.astro'
     animation: roll-r 5.5s ease-in-out infinite;
     animation-delay: -1.8s;
   }
-
-  /* Green pill */
   .rs-4 {
     width: 92px; height: 56px;
     border-radius: 28px;
@@ -159,8 +156,6 @@ import Grain from './ui/Grain.astro'
     animation: roll-l 8.5s ease-in-out infinite;
     animation-delay: -5.5s;
   }
-
-  /* Blue circle — medium */
   .rs-5 {
     width: 86px; height: 86px;
     border-radius: 50%;
@@ -169,8 +164,6 @@ import Grain from './ui/Grain.astro'
     animation: roll-l 10s ease-in-out infinite;
     animation-delay: -2.5s;
   }
-
-  /* Red pill — small */
   .rs-6 {
     width: 64px; height: 40px;
     border-radius: 20px;
@@ -179,8 +172,6 @@ import Grain from './ui/Grain.astro'
     animation: roll-r 7s ease-in-out infinite;
     animation-delay: -6.5s;
   }
-
-  /* Yellow pill */
   .rs-7 {
     width: 88px; height: 54px;
     border-radius: 27px;
@@ -189,8 +180,6 @@ import Grain from './ui/Grain.astro'
     animation: roll-l 9.5s ease-in-out infinite;
     animation-delay: -4s;
   }
-
-  /* Green circle — small */
   .rs-8 {
     width: 46px; height: 46px;
     border-radius: 50%;
@@ -230,14 +219,19 @@ import Grain from './ui/Grain.astro'
 <script>
   import gsap from 'gsap'
 
-  const tl = gsap.timeline({ delay: 0.15 })
-  tl.from('.hero-name .word', {
-    yPercent: 115,
-    duration: 1.1,
-    stagger: 0.13,
-    ease: 'power4.out',
+  // Chars enter left→right with rotation + blur — like shapes becoming letters
+  const tl = gsap.timeline({ delay: 0.2 })
+  tl.from('.hero-name .char', {
+    x: -50,
+    rotation: -22,
+    filter: 'blur(14px)',
+    opacity: 0,
+    transformOrigin: 'left center',
+    stagger: 0.05,
+    duration: 0.75,
+    ease: 'power3.out',
   })
-    .from('.hero-bottom', { opacity: 0, y: 8, duration: 0.5, ease: 'power2.out' }, '-=0.5')
+  .from('.hero-bottom', { opacity: 0, y: 8, duration: 0.5, ease: 'power2.out' }, '-=0.4')
 
   // Real-time clock
   const clockEl = document.getElementById('hero-clock')
@@ -269,7 +263,6 @@ import Grain from './ui/Grain.astro'
     )
 
     hero.addEventListener('mouseenter', () => { isInHero = true })
-
     hero.addEventListener('mouseleave', () => {
       isInHero = false
       validImgs.forEach((img) => { gsap.to(img, { opacity: 0, duration: 0.3 }) })
